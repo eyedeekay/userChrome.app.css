@@ -1,7 +1,3 @@
-# userChrome.app.css
-userChrome.css file which hides many normal interface features in order to provide the **base** for an app-like(not browser-like) use of Firefox. PWA-adjacent.
-
-```css
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
 /* only needed once */
@@ -52,4 +48,3 @@ userChrome.css file which hides many normal interface features in order to provi
     max-width: 50vw;
     width: 50vw;
 }
-```
