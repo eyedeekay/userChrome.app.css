@@ -1,119 +1,90 @@
-/* Firefox userChrome.css for minimal UI with tabs and extension buttons
- * Compatible with Firefox 115+
- * Maintains tab bar and extension buttons while hiding other UI elements
- */
+/* MINIMAL SINGLE-LINE FIREFOX INTERFACE (REVISED) */
 
-/* Required namespace declarations */
-@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
-@namespace html url("http://www.w3.org/1999/xhtml");
-
-/* Root variables for consistent theming */
-:root {
-    --toolbar-bgcolor: #2B2A33;
-    --chrome-content-separator-color: transparent;
-}
-
-/* Hide non-essential UI elements with improved specificity */
-:root {
-    --uc-toolbar-height: 32px;
-}
-
-/* Hide specific UI elements more reliably */
-#main-window[tabsintitlebar="true"]:not([inFullscreen]) #PersonalToolbar,
-#main-window[tabsintitlebar="true"]:not([inFullscreen]) #PanelUI-Button,
-#main-window[tabsintitlebar="true"]:not([inFullscreen]) #PanelUI-menu-button,
-#main-window[tabsintitlebar="true"]:not([inFullscreen]) #star-button,
-#main-window[tabsintitlebar="true"]:not([inFullscreen]) #forward-button,
-#main-window[tabsintitlebar="true"]:not([inFullscreen]) #home-button,
-#main-window[tabsintitlebar="true"]:not([inFullscreen]) #bookmarks-toolbar-button,
-#main-window[tabsintitlebar="true"]:not([inFullscreen]) #library-button,
-#main-window[tabsintitlebar="true"]:not([inFullscreen]) #sidebar-button,
-#main-window[tabsintitlebar="true"]:not([inFullscreen]) #pocket-button,
-#main-window[tabsintitlebar="true"]:not([inFullscreen]) #fxa-toolbar-menu-button,
-#main-window[tabsintitlebar="true"]:not([inFullscreen]) #reader-mode-button,
-#main-window[tabsintitlebar="true"]:not([inFullscreen]) #customizableui-special-spring1,
-#main-window[tabsintitlebar="true"]:not([inFullscreen]) #customizableui-special-spring2,
-#main-window[tabsintitlebar="true"]:not([inFullscreen]) #identity-icon {
-    display: none !important;
-}
-
-/* URL bar styling with improved specificity */
-#urlbar-container {
-    display: none !important;
-}
-
-#urlbar-background {
-    background-color: var(--toolbar-bgcolor) !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-/* Back button styling with proper selector specificity */
-#back-button {
-    -moz-appearance: none !important;
-    border: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-}
-
-#back-button:not(:hover) > .toolbarbutton-icon,
-#back-button:not(:hover) {
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-#back-button:hover > .toolbarbutton-icon,
-#back-button:hover {
-    background-color: color-mix(in srgb, currentColor 12%, transparent) !important;
-    border-radius: 2px !important;
-}
-
-/* Tabs toolbar layout with flex positioning */
-#TabsToolbar {
-    display: flex !important;
-    flex: 1;
-    min-height: var(--uc-toolbar-height) !important;
-}
-
+/* First, restore critical elements */
+#tabbrowser-tabs,
+#new-tab-button,
+#tabs-newtab-button,
 #TabsToolbar-customization-target {
-    min-width: 50vw;
-    max-width: 50vw;
-    width: 50vw;
-    flex: 1;
+  display: -moz-box !important; /* Ensures tab functionality */
 }
 
-/* Main toolbar container */
-#navigator-toolbox {
-    display: flex !important;
-    flex-direction: row !important;
-    background-color: var(--toolbar-bgcolor) !important;
+#firefox-view-button {
+  visibility: hidden !important; /* Hide the view button */
 }
 
-/* Ensure extension buttons remain visible */
-#nav-bar-customization-target {
-    display: flex !important;
-    flex: 0 1 auto;
+/* Hide the dev tools button */
+#developer-button {
+  visibility: hidden !important;
 }
 
-/* Handle overflow for extension buttons */
-#nav-bar-overflow-button {
-    display: flex !important;
-    visibility: visible !important;
+/* Hide URL bar but preserve tab functionality */
+#urlbar-container {
+  min-width: 0 !important;
+  width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  opacity: 0.01 !important; /* Using 0.01 instead of 0 preserves functionality */
+  visibility: hidden !important;
 }
 
-/* Fix for potential layout issues in fullscreen */
-#main-window[inFullscreen] #navigator-toolbox {
-    display: flex !important;
+/* Properly position elements */
+#nav-bar {
+  margin-top: -40px !important; /* Adjust based on your toolbar height */
+  position: relative !important;
+  z-index: 1 !important; 
+  pointer-events: none !important; /* Let mouse events pass through to tabs */
+  margin-right: 10%; /* Adjust based on your screen size */
 }
 
-/* Ensure tab bar remains visible and properly sized */
-#tabbrowser-tabs {
-    min-height: var(--uc-toolbar-height) !important;
-    flex: 1;
+/* But make buttons in navbar clickable */
+#nav-bar-customization-target,
+.toolbarbutton-1,
+#PanelUI-button,
+#unified-extensions-button,
+#nav-bar toolbar {
+  pointer-events: auto !important; /* Make specific elements clickable */
 }
 
-/* Ensure proper spacing for extension icons */
-.webextension-browser-action {
-    margin: 0 2px !important;
+/* Fix window controls for theme compatibility */
+.titlebar-button:-moz-lwtheme {
+  appearance: auto !important;
+}
+
+.titlebar-min:-moz-lwtheme,
+.titlebar-max:-moz-lwtheme,
+.titlebar-restore:-moz-lwtheme,
+.titlebar-close:-moz-lwtheme {
+  list-style-image: none !important;
+}
+
+.titlebar-button:-moz-lwtheme:hover,
+.titlebar-button:-moz-lwtheme:hover:active {
+  background-color: unset !important;
+  color: unset !important;
+}
+
+/* Make buttons and widgets sync colors with the titlebar */
+:root {
+  --toolbarbutton-icon-fill: color-mix(in srgb, currentColor 95%, transparent) !important;
+  --button-color: currentColor !important;
+  --button-bgcolor: color-mix(in srgb, currentColor 13%, transparent) !important;
+  --button-hover-bgcolor: color-mix(in srgb, currentColor 17%, transparent) !important;
+  --button-active-bgcolor: color-mix(in srgb, currentColor 30%, transparent) !important;
+}
+
+/* Fix tab bar to ensure it's visible and functional */
+#TabsToolbar {
+  z-index: 2 !important;
+  width: 60% !important; /* Adjust based on your screen size */
+  position: relative !important;
+}
+
+/* Remove extra tab bar space */
+#TabsToolbar {
+  padding-inline-start: 0px !important;
+  margin-bottom: none !important;
+}
+
+.titlebar-placeholder {
+  display: none !important;
 }
